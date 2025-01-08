@@ -1,7 +1,8 @@
 """Test cases for the HTMLNode class."""
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode, text_node_to_html_node
+from textnode import TextNode, TextType
 
 class TestHtmlNode(unittest.TestCase):
     """Test cases for the HTMLNode class."""
@@ -104,6 +105,53 @@ class TestParentNode(unittest.TestCase):
             ]
         )
         self.assertEqual(node.to_html(), "<div><div><p>This is a paragraph</p></div></div>")
+
+class TestFromTextNodeToHtmlNode(unittest.TestCase):
+    """Test cases for the text_node_to_html_node function."""
+    def test_normal_text_node(self):
+        """Test the text_node_to_html_node function with a normal text node."""
+        text_node = TextNode("This is a paragraph", TextType.NORMAL)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.to_html(), "This is a paragraph")
+
+    def test_bold_text_node(self):
+        """Test the text_node_to_html_node function with a bold text node."""
+        text_node = TextNode("This is a paragraph", TextType.BOLD)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.to_html(), "<b>This is a paragraph</b>")
+
+    def test_italic_text_node(self):
+        """Test the text_node_to_html_node function with an italic text node."""
+
+        text_node = TextNode("This is a paragraph", TextType.ITALIC)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.to_html(), "<i>This is a paragraph</i>")
+
+    def test_code_text_node(self):
+        """Test the text_node_to_html_node function with a code text node."""
+        text_node = TextNode("This is a paragraph", TextType.NORMAL)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.to_html(), "<code>This is a paragraph</code>")
+
+    def test_link_text_node(self):
+        """Test the text_node_to_html_node function with a link text node."""
+        text_node = TextNode("This is a paragraph", TextType.LINK, "https://www.boot.dev")
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(
+            html_node.to_html(),
+            '<a href="https://www.boot.dev">This is a paragraph</a>'
+        )
+
+    def test_image_text(self):
+        """Test the text_node_to_html_node function with an image text node."""
+
+
+        text_node = TextNode("This is an image", TextType.IMAGE, "https://www.boot.dev/image.png")
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(
+            html_node.to_html(),
+            '<img src="https://www.boot.dev/image.png" alt="This is an image"></img>'
+        )
 
 if __name__ == "__main__":
     unittest.main()
