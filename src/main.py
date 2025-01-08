@@ -3,7 +3,11 @@ from textnode import TextNode, TextType
 
 def main():
     """Main function to test the TextNode class"""
-    node = TextNode("This is a text node", TextType.NORMAL, "https://www.boot.dev")
+    node = TextNode(
+        "This is a text node",
+        TextType.NORMAL,
+        "https://www.boot.dev"
+    )
     print(node)
 
 main()

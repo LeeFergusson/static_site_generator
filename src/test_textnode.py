@@ -14,7 +14,10 @@ class TestTextNode(unittest.TestCase):
     def test_repr(self):
         """Test the string representation of a TextNode object."""
         node = TextNode("This is a text node", TextType.BOLD)
-        self.assertEqual(repr(node), "TextNode(This is a text node, bold, None)")
+        self.assertEqual(
+            repr(node),
+            "TextNode(This is a text node, bold, None)"
+        )
 
     def test_no_url(self):
         """Test the url attribute of a TextNode object with no url."""
@@ -23,7 +26,10 @@ class TestTextNode(unittest.TestCase):
 
     def test_with_url(self):
         """Test the url attribute of a TextNode object with a url."""
-        node = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
+        node = TextNode(
+            "This is a text node",
+            TextType.BOLD, "https://www.boot.dev"
+        )
         self.assertEqual(node.url, "https://www.boot.dev")
 
 
