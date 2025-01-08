@@ -1,7 +1,7 @@
 """Test cases for the HTMLNode class."""
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TestHtmlNode(unittest.TestCase):
     """Test cases for the HTMLNode class."""
@@ -59,6 +59,51 @@ class TestLeafNode(unittest.TestCase):
         """Test the to_html method of a LeafNode object."""
         node = LeafNode("This is a paragraph", "p")
         self.assertEqual(node.to_html(), "<p>This is a paragraph</p>")
+
+
+class TestParentNode(unittest.TestCase):
+    """Test cases for the ParentNode class."""
+    def test_eq(self):
+        """Test the equality of two ParentNode objects."""
+        node1 = ParentNode("div", [LeafNode("This is a paragraph", "p")])
+        node2 = ParentNode("div", [LeafNode("This is a paragraph", "p")])
+
+        self.assertEqual(node1, node2)
+
+    def test_parent_node_has_children(self):
+        """Test the children attribute of a ParentNode object."""
+        node = ParentNode("div", [LeafNode("This is a paragraph", "p")])
+        self.assertEqual(node.children, [LeafNode("This is a paragraph", "p")])
+
+    def test_parent_node_to_html(self):
+        """Test the to_html method of a ParentNode object."""
+        node = ParentNode("div", [LeafNode("This is a paragraph", "p")])
+        self.assertEqual(node.to_html(), "<div><p>This is a paragraph</p></div>")
+
+    def test_parent_node_no_children(self):
+        """Test the to_html method of a ParentNode object with no children."""
+        node = ParentNode("div", [])
+        with self.assertRaises(ValueError):
+            node.to_html()
+
+    def test_parent_node_no_tag(self):
+        """Test the to_html method of a ParentNode object with no tag."""
+        node = ParentNode(None, children=[LeafNode("This is a paragraph", "p")])
+        with self.assertRaises(ValueError):
+            node.to_html()
+
+    def test_nested_parents(self):
+        """Test the to_html method of a ParentNode object with nested parents."""
+        node = ParentNode(
+            "div",
+            [
+                ParentNode(
+                    "div",
+                    [LeafNode("This is a paragraph", "p")]
+                )
+            ]
+        )
+        self.assertEqual(node.to_html(), "<div><div><p>This is a paragraph</p></div></div>")
 
 if __name__ == "__main__":
     unittest.main()
