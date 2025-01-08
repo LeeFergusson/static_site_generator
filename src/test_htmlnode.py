@@ -1,7 +1,7 @@
 """Test cases for the HTMLNode class."""
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 class TestHtmlNode(unittest.TestCase):
     """Test cases for the HTMLNode class."""
@@ -40,6 +40,25 @@ class TestHtmlNode(unittest.TestCase):
         """Test the tag attribute of a HtmlNode object with no tag."""
         node = HTMLNode(value="This is a paragraph")
         self.assertEqual(node.tag, None)
+
+class TestLeafNode(unittest.TestCase):
+    """Test cases for the LeafNode class."""
+    def test_eq(self):
+        """Test the equality of two LeafNode objects."""
+        node1 = LeafNode("This is a paragraph", "p")
+        node2 = LeafNode("This is a paragraph", "p")
+
+        self.assertEqual(node1, node2)
+
+    def test_leaf_node_has_no_children(self):
+        """Test the children attribute of a LeafNode object."""
+        node = LeafNode("This is a paragraph", "p")
+        self.assertEqual(node.children, None)
+
+    def test_leaf_node_to_html(self):
+        """Test the to_html method of a LeafNode object."""
+        node = LeafNode("This is a paragraph", "p")
+        self.assertEqual(node.to_html(), "<p>This is a paragraph</p>")
 
 if __name__ == "__main__":
     unittest.main()
