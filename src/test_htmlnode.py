@@ -1,7 +1,7 @@
 """Test cases for the HTMLNode class."""
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode, text_node_to_html_node
+from htmlnode import HTMLNode, LeafNode, ParentNode, split_nodes_delimiter, text_node_to_html_node
 from textnode import TextNode, TextType
 
 class TestHtmlNode(unittest.TestCase):
@@ -110,7 +110,7 @@ class TestFromTextNodeToHtmlNode(unittest.TestCase):
     """Test cases for the text_node_to_html_node function."""
     def test_normal_text_node(self):
         """Test the text_node_to_html_node function with a normal text node."""
-        text_node = TextNode("This is a paragraph", TextType.NORMAL)
+        text_node = TextNode("This is a paragraph", TextType.TEXT)
         html_node = text_node_to_html_node(text_node)
         self.assertEqual(html_node.to_html(), "This is a paragraph")
 
@@ -129,7 +129,7 @@ class TestFromTextNodeToHtmlNode(unittest.TestCase):
 
     def test_code_text_node(self):
         """Test the text_node_to_html_node function with a code text node."""
-        text_node = TextNode("This is a paragraph", TextType.NORMAL)
+        text_node = TextNode("This is a paragraph", TextType.CODE)
         html_node = text_node_to_html_node(text_node)
         self.assertEqual(html_node.to_html(), "<code>This is a paragraph</code>")
 
@@ -152,6 +152,59 @@ class TestFromTextNodeToHtmlNode(unittest.TestCase):
             html_node.to_html(),
             '<img src="https://www.boot.dev/image.png" alt="This is an image"></img>'
         )
+
+class TestSplitNodesDelimiter(unittest.TestCase):
+    """Test cases for the split_nodes_delimiter function."""
+    def test_split_nodes_delimiter(self):
+        """Test the split_nodes_delimiter function."""
+        result = split_nodes_delimiter(
+            [TextNode("This is *bold*", TextType.TEXT)],
+            "*",
+            TextType.BOLD
+        )
+        self.assertEqual(
+            result,
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD)
+            ]
+        )
+
+    def test_split_nodes_delimiter_no_delimiter(self):
+        """Test the split_nodes_delimiter function with no delimiter."""
+        with self.assertRaises(ValueError):
+            split_nodes_delimiter(
+                [TextNode("This is bold", TextType.TEXT)],
+                "",
+                TextType.TEXT
+            )
+
+    def test_split_nodes_delimiter_no_nodes(self):
+        """Test the split_nodes_delimiter function with no nodes."""
+        with self.assertRaises(ValueError):
+            split_nodes_delimiter(
+                [],
+                "*",
+                TextType.BOLD
+            )
+
+    def test_split_nodes_delimiter_no_text(self):
+        """Test the split_nodes_delimiter function with no text."""
+        with self.assertRaises(ValueError):
+            split_nodes_delimiter(
+                [TextNode("", TextType.TEXT)],
+                "*",
+                TextType.BOLD
+            )
+
+    def test_split_nodes_delimiter_no_text_type(self):
+        """Test the split_nodes_delimiter function with no text type."""
+        with self.assertRaises(ValueError):
+            split_nodes_delimiter(
+                [TextNode("This is bold", TextType.TEXT)],
+                "*",
+                None
+            )
 
 if __name__ == "__main__":
     unittest.main()

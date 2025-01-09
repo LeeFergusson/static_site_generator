@@ -3,7 +3,7 @@ from enum import Enum
 
 class TextType(Enum):
     """An enum class to represent the type of text node"""
-    NORMAL = "normal"
+    TEXT = "text"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
@@ -14,6 +14,8 @@ class TextType(Enum):
 class TextNode:
     """A class to represent a text node"""
     def __init__(self, text, text_type, url=None):
+        if text == "":
+            raise ValueError("Text cannot be empty")
         self.text = text
         self.text_type = text_type
         self.url = url
